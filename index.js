@@ -27,6 +27,12 @@ async function run() {
     const database = client.db("Cluster0");
     const equipmentCollection = database.collection("equipment");
 
+    app.get("/equipment", async (req, res) => {
+      const cursor = equipmentCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.post("/equipment", async (req, res) => {
       const newEquipment = req.body;
       console.log(newEquipment);
