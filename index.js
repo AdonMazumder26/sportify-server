@@ -40,6 +40,14 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/equipment/email/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const cursor = equipmentCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.post("/equipment", async (req, res) => {
       const newEquipment = req.body;
       console.log(newEquipment);
