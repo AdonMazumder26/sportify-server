@@ -28,7 +28,7 @@ async function run() {
     const equipmentCollection = database.collection("equipment");
 
     app.get("/equipment", async (req, res) => {
-      const cursor = equipmentCollection.find();
+      const cursor = equipmentCollection.find().limit(6);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -45,6 +45,36 @@ async function run() {
       const query = { email: email };
       const cursor = equipmentCollection.find(query);
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.put("/equipment/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = {
+        upsert: true,
+      };
+      const updatedEquipment = req.body;
+      const equipment = {
+        $set: {
+          itemName: updatedEquipment.itemName,
+          photo: updatedEquipment.photo,
+          category: updatedEquipment.category,
+          price: updatedEquipment.price,
+          rating: updatedEquipment.rating,
+          customization: updatedEquipment.customization,
+          process: updatedEquipment.process,
+          stock: updatedEquipment.stock,
+          description: updatedEquipment.description,
+          email: updatedEquipment.email,
+          name: updatedEquipment.name,
+        },
+      };
+      const result = await equipmentCollection.updateOne(
+        filter,
+        equipment,
+        options
+      );
       res.send(result);
     });
 
